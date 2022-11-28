@@ -1,23 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { MuseClient } from "muse-js";
+import axios from "axios";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        <p
+          onClick={async () => {
+            let client = new MuseClient();
+            await client.connect();
+            await client.start();
+            client.eegReadings.subscribe((reading) => {
+              axios.post("https://a-final-project.herokuapp.com/" + "save", {
+                stringifid: JSON.stringify(reading),
+              });
+            });
+          }}
         >
-          Learn React
-        </a>
+          click here to connect{" "}
+        </p>
       </header>
     </div>
   );
