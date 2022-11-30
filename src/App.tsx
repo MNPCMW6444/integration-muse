@@ -1,28 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { MuseClient } from "muse-js";
 import axios from "axios";
 
+let c = true;
+
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p
+        <button
+          style={{ fontSize: "10rem" }}
+          onClick={() => {
+            c = false;
+          }}
+        >
+          stop
+        </button>
+        <br />
+        <button
+          style={{ fontSize: "10rem" }}
           onClick={async () => {
             let client = new MuseClient();
             await client.connect();
             await client.start();
             client.eegReadings.subscribe((reading) => {
-              axios.post("https://a-final-project.herokuapp.com/" + "save", {
-                stringifid: JSON.stringify(reading),
-              });
+              if (c) {
+                axios.post("https://a-final-project.herokuapp.com/" + "save", {
+                  stringified: JSON.stringify(reading),
+                });
+              }
             });
           }}
         >
-          click here to connect{" "}
-        </p>
+          start
+        </button>
       </header>
     </div>
   );
